@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20rx%3D%226%22%20fill%3D%22%231E3B2A%22/%3E%3Ctext%20x%3D%2250%22%20y%3D%2268%22%20font-family%3D%22Georgia%22%20font-size%3D%2252%22%20text-anchor%3D%22middle%22%20fill%3D%22%23B0975C%22%3EK%3C/text%3E%3C/svg%3E">
+<title>Kroger Campaign Monitor</title>
+<style>
+  :root {
+    --wall: #E4E8E0; --paper: #FBFAF6; --card: #EEF2EA;
+    --forest: #1E3B2A; --forest-mid: #2E5840; --green: #4B7659; --green-soft: #A8BEA9; --green-wash: #DCE7D9;
+    --gold: #B0975C; --gold-soft: #E2D7BA; --gold-wash: #F7F2E4;
+    --red: #A3302A; --red-wash: #F6E3E0; --red-soft: #DDA8A2;
+    --blue: #36597A; --blue-wash: #E2EAF1;
+    --line: #D5DBCF; --ink: #24302A; --muted: #5C6960;
+    color-scheme: light;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { background: var(--wall); }
+  body { margin: 0; color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  a { color: var(--forest-mid); }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  header { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+  header .mark { width: 54px; height: 54px; background: var(--forest); color: var(--gold); display: grid; place-items: center; font-size: 28px; border-radius: 3px; flex: none; }
+  header h1 { margin: 0; font-weight: normal; font-style: italic; color: var(--forest); font-size: 32px; line-height: 1.1; }
+  header .sub { color: var(--muted); font-size: 13px; letter-spacing: .06em; }
+  .controls { margin-left: auto; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  select, .btn { font: inherit; font-size: 14px; border-radius: 3px; padding: 7px 14px; border: 1px solid var(--forest-mid); }
+  select { background: var(--paper); color: var(--forest); }
+  .btn { cursor: pointer; background: var(--forest-mid); color: var(--paper); text-decoration: none; display: inline-block; }
+  .btn.ghost { background: transparent; color: var(--forest-mid); }
+  .btn.sm { font-size: 12.5px; padding: 3px 10px; }
+  .btn:disabled { opacity: .6; cursor: wait; }
+  .btn:focus-visible, select:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  nav.tabs { display: flex; gap: 0; border-bottom: 2px solid var(--forest-mid); margin-bottom: 18px; overflow-x: auto; }
+  nav.tabs button { font: inherit; font-size: 15px; background: transparent; border: 0; padding: 9px 18px; color: var(--muted); cursor: pointer; border-radius: 3px 3px 0 0; white-space: nowrap; }
+  nav.tabs button[aria-selected="true"] { background: var(--forest-mid); color: var(--paper); }
+  nav.tabs .count { font-size: 12px; margin-left: 6px; padding: 0 6px; border-radius: 9px; background: var(--red); color: #fff; }
+  nav.tabs .count:empty { display: none; }
+
+  .panel { background: var(--paper); border: 1px solid var(--line); border-radius: 3px; padding: 20px 22px; }
+  .panel h2 { margin: 0 0 4px; font-weight: normal; font-style: italic; color: var(--forest); font-size: 24px; }
+  .note { color: var(--muted); font-size: 13px; margin: 0 0 14px; }
+  .empty { color: var(--muted); font-style: italic; padding: 18px 0; }
+
+  .filters { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 12px; }
+  .filters button { font: inherit; font-size: 13px; padding: 3px 12px; border: 1px solid var(--line); background: var(--card); color: var(--forest); border-radius: 3px; cursor: pointer; }
+  .filters button[aria-pressed="true"] { background: var(--forest-mid); color: var(--paper); border-color: var(--forest-mid); }
+
+  .item { border-left: 4px solid var(--forest-mid); background: var(--card); border-radius: 3px; padding: 10px 14px; margin-bottom: 8px; }
+  .item.kevin { border-left-color: var(--red); background: #FBF3F1; }
+  .item .top { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+  .item .title { font-size: 16px; color: var(--forest); font-weight: bold; text-decoration: none; }
+  .item.kevin .title { color: var(--red); }
+  .item .title:hover { text-decoration: underline; }
+  .item .meta { color: var(--muted); font-size: 13px; margin-top: 2px; }
+  .item .snip { font-size: 13.5px; margin-top: 3px; }
+  .flag { font-size: 11.5px; letter-spacing: .05em; padding: 1px 7px; border-radius: 2px; text-transform: uppercase; }
+  .flag.new { background: var(--gold); color: #fff; }
+  .flag.kev { background: var(--red); color: #fff; }
+  .flag.chg { background: var(--red); color: #fff; }
+  .flag.same { background: var(--green-wash); color: var(--forest); }
+  .flag.first { background: var(--blue-wash); color: var(--blue); }
+  .flag.down { background: #555; color: #fff; }
+  .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+  .chip { font-size: 12px; padding: 0 8px; border-radius: 2px; border: 1px solid; }
+  .chip.kevin { color: var(--red); border-color: var(--red-soft); background: var(--red-wash); }
+  .chip.group { color: var(--forest); border-color: var(--green-soft); background: var(--green-wash); }
+  .chip.affil { color: #7A6431; border-color: var(--gold-soft); background: var(--gold-wash); }
+  .chip.issue { color: var(--blue); border-color: #B8C9D9; background: var(--blue-wash); }
+  .warn { font-size: 12.5px; color: #7A6431; margin-top: 4px; font-style: italic; }
+  .found { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  .status { font-size: 12.5px; color: var(--muted); margin-top: 14px; border-top: 1px solid var(--line); padding-top: 10px; }
+  .status span { display: inline-block; margin: 0 12px 2px 0; }
+  .status .bad { color: var(--red); }
+
+  .sites { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; }
+  .site { border: 1px solid var(--line); border-left: 4px solid var(--forest-mid); background: var(--card); border-radius: 3px; padding: 12px 14px; min-width: 0; }
+  .site.kevin { border-left-color: var(--red); }
+  .site h3 { margin: 0; font-size: 16px; color: var(--forest); overflow-wrap: anywhere; }
+  .site.kevin h3 { color: var(--red); }
+  .site h3 a { color: inherit; }
+  .site .host { font-size: 13px; color: var(--muted); }
+  .site .row { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0; align-items: center; }
+  .site .sec { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--green); margin: 8px 0 2px; }
+  .site ul { margin: 0; padding-left: 1.1em; font-size: 13px; }
+  .site li { overflow-wrap: anywhere; }
+  .site li.newh { color: var(--red); font-weight: bold; }
+  .site .small { font-size: 12.5px; color: var(--muted); overflow-wrap: anywhere; }
+
+  table.dir { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.dir th { text-align: left; font-weight: normal; color: var(--green); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; border-bottom: 1px solid var(--line); padding: 6px 8px; }
+  table.dir td { border-bottom: 1px solid var(--line); padding: 8px; vertical-align: top; }
+  table.dir tr.kevin td:first-child { color: var(--red); font-weight: bold; }
+  table.dir tr.kevin td:first-child::before { content: "● "; }
+  .links { display: flex; flex-wrap: wrap; gap: 4px; }
+  .links a { font-size: 13px; text-decoration: none; border: 1px solid var(--line); background: var(--paper); padding: 1px 8px; border-radius: 2px; }
+  .links a:hover { border-color: var(--forest-mid); }
+  label.ck { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; cursor: pointer; white-space: nowrap; }
+  .tblwrap { overflow-x: auto; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; margin: 0 0 12px; color: var(--muted); }
+  .legend b { font-weight: normal; }
+  .qs { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
+  .qs a { display: block; border: 1px solid var(--line); background: var(--card); border-left: 4px solid var(--forest-mid); border-radius: 3px; padding: 8px 12px; text-decoration: none; color: var(--forest); }
+  .qs a.kevin { border-left-color: var(--red); }
+  .qs a small { display: block; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+  .qs h3 { grid-column: 1 / -1; margin: 10px 0 0; font-weight: normal; color: var(--green); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+
+  .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--forest); color: var(--paper); padding: 8px 18px; border-radius: 3px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+  .toast.show { opacity: 1; }
+  [hidden] { display: none !important; }
+  @media (max-width: 600px) { header h1 { font-size: 26px; } .panel { padding: 16px 14px; } .controls { margin-left: 0; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="mark">K</div>
+    <div>
+      <div class="sub">LAUREL STRATEGIES</div>
+      <h1>Kroger Campaign Monitor</h1>
+      <div class="sub">Organizations targeting Kroger and Kevin Brown</div>
+    </div>
+    <div class="controls">
+      <select id="win" aria-label="Time window">
+        <option value="1d">Past 24 hours</option>
+        <option value="7d" selected>Past 7 days</option>
+        <option value="30d">Past 30 days</option>
+      </select>
+      <button class="btn" id="run">Run scan</button>
+      <button class="btn ghost" id="copy">Copy summary</button>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-tab="news" aria-selected="true">News &amp; web<span class="count" id="c-news"></span></button>
+    <button role="tab" data-tab="sites" aria-selected="false">Campaign sites<span class="count" id="c-sites"></span></button>
+    <button role="tab" data-tab="social" aria-selected="false">Social &amp; directory</button>
+    <button role="tab" data-tab="search" aria-selected="false">Quick searches</button>
+  </nav>
+
+  <!-- NEWS -->
+  <section class="panel" id="tab-news">
+    <h2>News &amp; web mentions</h2>
+    <p class="note">Runs the Google Alert searches and the master Boolean, plus Kroger searches on each group's own site. <b style="color:var(--red)">Red</b> = names Kevin Brown. <b style="color:var(--gold)">NEW</b> = not seen on an earlier scan in this browser.</p>
+    <div class="filters" id="nfilters">
+      <button data-f="all" aria-pressed="true">All</button>
+      <button data-f="kevin" aria-pressed="false">Names Kevin</button>
+      <button data-f="new" aria-pressed="false">New only</button>
+      <button data-f="group" aria-pressed="false">Mentions a group</button>
+      <button data-f="kroger" aria-pressed="false">Kroger only (no Kevin)</button>
+    </div>
+    <div id="news"><p class="empty">Press Run scan.</p></div>
+    <div class="status" id="nstatus" hidden></div>
+  </section>
+
+  <!-- SITES -->
+  <section class="panel" id="tab-sites" hidden>
+    <h2>Campaign websites</h2>
+    <p class="note">Each site is opened and compared with the last time you ran a scan in this browser. <b>Changed</b> means the page text is different; new headings are in red. Sitemap pages are listed when the site publishes a sitemap — for the big org sites, only pages with Kroger, Kevin or Dell in the address.</p>
+    <div class="filters" id="sfilters">
+      <button data-f="all" aria-pressed="true">All</button>
+      <button data-f="kevin" aria-pressed="false">Targets Kevin</button>
+      <button data-f="changed" aria-pressed="false">Changed</button>
+    </div>
+    <div class="sites" id="sites"><p class="empty">Press Run scan.</p></div>
+  </section>
+
+  <!-- SOCIAL -->
+  <section class="panel" id="tab-social" hidden>
+    <h2>Social platforms &amp; directory</h2>
+    <p class="note">Instagram, Facebook, X, TikTok and LinkedIn block automated reading, so these open in your own browser. Tick each one once you've checked it today; ticks reset each day.</p>
+    <div class="legend"><b style="color:var(--red)">● Red</b> targets Kevin by name <b>Plain</b> targets Kroger</div>
+    <div class="tblwrap"><table class="dir"><thead><tr><th>Organization</th><th>Social</th><th>Websites</th><th>Checked today</th></tr></thead><tbody id="dir"></tbody></table></div>
+  </section>
+
+  <!-- QUICK SEARCHES -->
+  <section class="panel" id="tab-search" hidden>
+    <h2>Quick searches</h2>
+    <p class="note">One-click live searches for places the scan can't reach. They open in a new tab, already filtered to the time window you picked above.</p>
+    <div class="qs" id="qs"></div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ---------- Directory (edit links here) ----------
+const ORGS = [
+  { name: "Animal Equality", kevin: true,
+    social: [["Instagram", "https://www.instagram.com/animalequality/"], ["Facebook", "https://www.facebook.com/AnimalEquality"], ["TikTok", "https://www.tiktok.com/@animalequality"]],
+    sites: [["animalequality.org", "https://animalequality.org"], ["kevinbrown.exposed", "https://kevinbrown.exposed"]] },
+  { name: "Igualdad Animal (Animal Equality Spanish)", kevin: false,
+    social: [["Instagram", "https://www.instagram.com/igualdadanimal/"], ["X", "https://x.com/IgualdadAnimal"], ["Facebook", "https://www.facebook.com/IgualdadAnimal"]],
+    sites: [["igualdadanimal.org", "https://igualdadanimal.org"]] },
+  { name: "Animal Equality UK", kevin: true,
+    social: [["Instagram", "https://www.instagram.com/animalequalityuk/"], ["Facebook", "https://www.facebook.com/animalequalityuk/"], ["X", "https://x.com/animal_equality"]],
+    sites: [["animalequality.org.uk", "https://animalequality.org.uk"]] },
+  { name: "The Humane League", kevin: true,
+    social: [["Instagram", "https://www.instagram.com/thehumaneleague/"], ["Facebook", "https://www.facebook.com/thehumaneleague"], ["Campaign to watch (X post)", "https://x.com/TheHumaneLeague/status/1934966885067395106"]],
+    sites: [["thehumaneleague.org", "https://thehumaneleague.org"], ["kevinbrownscandal.com", "https://kevinbrownscandal.com"], ["krogerdoesntcare.com", "https://krogerdoesntcare.com"]] },
+  { name: "Center for Responsible Food Business (CRFB)", kevin: true,
+    social: [["LinkedIn (Taylor Warren Ford)", "https://www.linkedin.com/in/taylor-warren-ford-83648693/"]],
+    sites: [["whoiskevinbrown.com", "https://whoiskevinbrown.com"]] },
+  { name: "Animal Activism Collective (AAC)", kevin: true,
+    social: [["Instagram @animalactivismcollective", "https://www.instagram.com/animalactivismcollective/"]],
+    sites: [["animalactivismcollective.com", "https://animalactivismcollective.com"]] },
+  { name: "Humane World for Animals", kevin: false,
+    social: [],
+    sites: [["humaneworld.org", "https://www.humaneworld.org"]] },
+  { name: "Mercy for Animals", kevin: false,
+    social: [],
+    sites: [["mercyforanimals.org", "https://mercyforanimals.org"]] },
+  { name: "Unattributed sites", kevin: true,
+    social: [],
+    sites: [["krogerhurtsfamilies.com", "https://www.krogerhurtsfamilies.com"], ["canttrustkroger.com", "https://canttrustkroger.com"]] },
+];
+
+// ---------- State ----------
+const K = { seen: "kkm.seen", sites: "kkm.sites", checks: "kkm.checks" };
+const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (e) { return d; } };
+const store = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+let news = null, sites = null, nf = "all", sf = "all";
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const fmt = d => d ? new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "";
+const today = () => new Date().toLocaleDateString("en-CA");
+function toast(t) { const el = $("#toast"); el.textContent = t; el.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("show"), 1800); }
+
+// ---------- Tabs ----------
+document.querySelectorAll("nav.tabs button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("nav.tabs button").forEach(x => x.setAttribute("aria-selected", x === b));
+  document.querySelectorAll("section.panel").forEach(p => p.hidden = p.id !== "tab-" + b.dataset.tab);
+});
+function filterBar(id, set) {
+  document.querySelectorAll(id + " button").forEach(b => b.onclick = () => {
+    document.querySelectorAll(id + " button").forEach(x => x.setAttribute("aria-pressed", x === b));
+    set(b.dataset.f);
+  });
+}
+filterBar("#nfilters", f => { nf = f; renderNews(); });
+filterBar("#sfilters", f => { sf = f; renderSites(); });
+
+// ---------- Scan ----------
+$("#run").onclick = async () => {
+  const btn = $("#run"), w = $("#win").value;
+  btn.disabled = true; btn.textContent = "Scanning…";
+  $("#news").innerHTML = '<p class="empty">Searching news…</p>';
+  $("#sites").innerHTML = '<p class="empty">Checking sites…</p>';
+  const [n, s] = await Promise.all([
+    fetch("/api/scan?window=" + w, { cache: "no-store" }).then(r => r.json()).catch(e => ({ error: String(e) })),
+    fetch("/api/sites?window=" + w, { cache: "no-store" }).then(r => r.json()).catch(e => ({ error: String(e) })),
+  ]);
+  // News: mark unseen links as new, then remember them.
+  if (n.items) {
+    const seen = new Set(load(K.seen, []));
+    n.items.forEach(it => it.isNew = !seen.has(it.link) && !seen.has(it.title));
+    const next = [...n.items.flatMap(it => [it.link, it.title]), ...seen].slice(0, 4000);
+    store(K.seen, next);
+  }
+  // Sites: compare with the last saved snapshot.
+  if (s.sites) {
+    const prev = load(K.sites, {});
+    s.sites.forEach(x => {
+      const p = prev[x.id];
+      x.first = !p;
+      x.changed = !!(p && x.hash && p.hash !== x.hash);
+      x.prevAt = p && p.at;
+      x.newHeads = p ? (x.headings || []).filter(h => !(p.headings || []).includes(h)) : [];
+      x.goneHeads = p ? (p.headings || []).filter(h => !(x.headings || []).includes(h)) : [];
+      // Keep the old snapshot if the site was unreachable this time.
+      if (x.hash) prev[x.id] = { hash: x.hash, headings: x.headings, at: x.checked };
+    });
+    store(K.sites, prev);
+  }
+  news = n; sites = s;
+  renderNews(); renderSites();
+  btn.disabled = false; btn.textContent = "Run scan";
+};
+
+function renderNews() {
+  const box = $("#news"), st = $("#nstatus");
+  if (!news) return;
+  if (news.error || !news.items) { box.innerHTML = '<p class="empty">The news search failed: ' + esc(news.error || "no response") + "</p>"; return; }
+  const items = news.items.filter(it =>
+    nf === "all" ? true : nf === "kevin" ? it.namesKevin : nf === "new" ? it.isNew :
+    nf === "group" ? it.hits.some(h => h.group === "group") : !it.namesKevin);
+  $("#c-news").textContent = news.items.filter(i => i.isNew).length || "";
+  box.innerHTML = items.length ? items.map(it => `
+    <div class="item${it.namesKevin ? " kevin" : ""}">
+      <div class="top">
+        ${it.isNew ? '<span class="flag new">New</span>' : ""}
+        ${it.namesKevin ? '<span class="flag kev">Names Kevin</span>' : ""}
+        <a class="title" href="${esc(it.link)}" target="_blank" rel="noopener">${esc(it.title)}</a>
+      </div>
+      <div class="meta">${esc(it.source)}${it.date ? " · " + fmt(it.date) : ""}</div>
+      ${it.snippet ? `<div class="snip">${esc(it.snippet)}</div>` : ""}
+      <div class="chips">${it.hits.map(h => `<span class="chip ${h.group}">${esc(h.label)}</span>`).join("")}</div>
+      ${it.namesKevin && it.contextOnly ? '<div class="warn">No other key term in the headline — open it to confirm this is the right Kevin Brown.</div>' : ""}
+      ${!it.namesKevin && /Kevin Brown/.test(it.searches.join()) ? '<div class="warn">Found by a Kevin Brown search, but his name isn\'t in the headline — check the article body.</div>' : ""}
+      <div class="found">Found by: ${esc(it.searches.join(" · "))}</div>
+    </div>`).join("") : '<p class="empty">Nothing matches this filter.</p>';
+  st.hidden = false;
+  st.innerHTML = "Scanned " + new Date(news.generated).toLocaleString() + ". " + news.status.map(s =>
+    s.ok ? `<span>${esc(s.label)}: ${s.count}</span>` : `<span class="bad">${esc(s.label)}: failed</span>`).join("");
+}
+
+function renderSites() {
+  const box = $("#sites");
+  if (!sites) return;
+  if (sites.error || !sites.sites) { box.innerHTML = '<p class="empty">The site check failed: ' + esc(sites.error || "no response") + "</p>"; return; }
+  $("#c-sites").textContent = sites.sites.filter(s => s.changed).length || "";
+  const list = sites.sites.filter(s => sf === "all" ? true : sf === "kevin" ? s.kevin : s.changed);
+  box.innerHTML = list.length ? list.map(s => {
+    const flag = !s.up ? '<span class="flag down">' + (s.status ? "Error " + s.status : "Unreachable") + "</span>"
+      : s.first ? '<span class="flag first">First check</span>'
+      : s.changed ? '<span class="flag chg">Changed</span>' : '<span class="flag same">No change</span>';
+    const counts = Object.entries(s.counts || {}).map(([k, n]) =>
+      `<span class="chip ${k === "Kevin Brown" ? "kevin" : ["Kroger", "Dell", "BCG", "Hotchkiss", "JFK Library", "GWU", "Howard"].includes(k) ? "affil" : "issue"}">${esc(k)} ×${n}</span>`).join("");
+    const pages = (s.sitemap && s.sitemap.pages) || [];
+    return `<div class="site${s.kevin ? " kevin" : ""}">
+      <h3><a href="${esc(s.finalUrl || s.url)}" target="_blank" rel="noopener">${esc(s.url.replace(/^https?:\/\/(www\.)?/, ""))}</a></h3>
+      <div class="host">${esc(s.host)} — ${esc(s.note)}</div>
+      <div class="row">${flag}${s.redirected ? `<span class="small">→ redirects to ${esc(s.finalUrl)}</span>` : ""}</div>
+      ${s.prevAt && s.up ? `<div class="small">Compared with ${fmt(s.prevAt)}</div>` : ""}
+      ${s.title ? `<div class="small"><i>${esc(s.title)}</i></div>` : ""}
+      ${counts ? `<div class="chips">${counts}</div>` : ""}
+      ${s.newHeads && s.newHeads.length ? `<div class="sec">New headings</div><ul>${s.newHeads.map(h => `<li class="newh">${esc(h)}</li>`).join("")}</ul>` : ""}
+      ${s.goneHeads && s.goneHeads.length ? `<div class="sec">Removed headings</div><ul>${s.goneHeads.map(h => `<li><s>${esc(h)}</s></li>`).join("")}</ul>` : ""}
+      ${(!s.newHeads || !s.newHeads.length) && s.headings && s.headings.length ? `<div class="sec">Headings</div><ul>${s.headings.slice(0, 6).map(h => `<li>${esc(h)}</li>`).join("")}${s.headings.length > 6 ? `<li class="small">+${s.headings.length - 6} more</li>` : ""}</ul>` : ""}
+      ${s.linksTo && s.linksTo.length ? `<div class="sec">Links to</div><div class="small">${s.linksTo.map(esc).join(", ")}</div>` : ""}
+      ${pages.length ? `<div class="sec">Sitemap pages</div><ul>${pages.map(p => `<li>${p.recent ? '<span class="flag new">Updated</span> ' : ""}<a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.url.replace(/^https?:\/\/[^/]+/, "") || "/")}</a> <span class="small">${fmt(p.lastmod)}</span></li>`).join("")}</ul>` : ""}
+      ${s.error ? `<div class="small">${esc(s.error)}</div>` : ""}
+    </div>`;
+  }).join("") : '<p class="empty">Nothing matches this filter.</p>';
+}
+
+// ---------- Directory ----------
+function renderDir() {
+  const checks = load(K.checks, {});
+  const day = checks[today()] || {};
+  $("#dir").innerHTML = ORGS.map((o, i) => `
+    <tr class="${o.kevin ? "kevin" : ""}">
+      <td>${esc(o.name)}</td>
+      <td><div class="links">${o.social.map(([l, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(l)}</a>`).join("") || '<span class="small" style="color:var(--muted)">—</span>'}</div></td>
+      <td><div class="links">${o.sites.map(([l, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(l)}</a>`).join("")}</div></td>
+      <td><label class="ck"><input type="checkbox" data-i="${i}" ${day[i] ? "checked" : ""}> Done</label></td>
+    </tr>`).join("");
+  $("#dir").querySelectorAll("input").forEach(cb => cb.onchange = () => {
+    const c = load(K.checks, {}); const d = { [today()]: c[today()] || {} };
+    d[today()][cb.dataset.i] = cb.checked; store(K.checks, d);
+  });
+}
+
+// ---------- Quick searches ----------
+const BOOLEAN = '"Kevin Brown" ("Animal Equality" OR "Animal Activism" OR CRFB OR "animal cruelty" OR Kroger OR Dell OR "Boston Consulting Group" OR BCG OR Hotchkiss OR "JFK Library" OR "George Washington University" OR GWU OR Howard OR protest)';
+function renderQs() {
+  const w = $("#win").value;
+  const g = { "1d": "qdr:d", "7d": "qdr:w", "30d": "qdr:m" }[w];
+  const google = q => "https://www.google.com/search?q=" + encodeURIComponent(q) + "&tbs=" + g;
+  const xSince = new Date(Date.now() - ({ "1d": 1, "7d": 7, "30d": 30 }[w]) * 86400000).toISOString().slice(0, 10);
+  const x = q => "https://x.com/search?q=" + encodeURIComponent(q + " since:" + xSince) + "&f=live";
+  const groups = [
+    ["Google web (whole web, not just news)", [
+      [true, "Master Boolean", google(BOOLEAN)],
+      [true, "Kevin Brown + Kroger + animal", google('"Kevin Brown" Kroger (animal OR cage-free OR cruelty OR eggs)')],
+      [true, "Kevin Brown + Dell", google('"Kevin Brown" Dell (animal OR cruelty OR cage-free OR board)')],
+      [true, "Kevin Brown + affiliations", google('"Kevin Brown" ("JFK Library" OR Hotchkiss OR GWU OR "George Washington University") (animal OR cruelty)')],
+      [true, "Kevin Brown + groups", google('"Kevin Brown" ("The Humane League" OR "Animal Equality" OR CRFB OR "Center for Responsible Food Business")')],
+      [true, "Pages linking whoiskevinbrown.com", google('"whoiskevinbrown.com" -site:whoiskevinbrown.com')],
+      [false, "Kroger cage-free campaign", google('Kroger cage-free (campaign OR petition OR protest)')],
+    ]],
+    ["Social posts indexed by Google", [
+      [true, "Instagram", google('site:instagram.com "Kevin Brown" Kroger')],
+      [true, "TikTok", google('site:tiktok.com "Kevin Brown" Kroger')],
+      [true, "Facebook", google('site:facebook.com "Kevin Brown" Kroger')],
+      [true, "LinkedIn", google('site:linkedin.com "Kevin Brown" Kroger (animal OR cage-free)')],
+    ]],
+    ["X live search (opens logged in)", [
+      [true, "Kevin Brown + Kroger", x('"Kevin Brown" Kroger')],
+      [true, "whoiskevinbrown links", x("whoiskevinbrown.com")],
+      [true, "Kevin Brown + Dell", x('"Kevin Brown" Dell')],
+      [false, "From @TheHumaneLeague about Kroger", x("from:TheHumaneLeague Kroger")],
+      [false, "From @AnimalEquality about Kroger", x("from:AnimalEquality Kroger")],
+      [false, "Kroger cage-free", x("Kroger cage-free")],
+    ]],
+  ];
+  $("#qs").innerHTML = groups.map(([h, ls]) => `<h3>${esc(h)}</h3>` + ls.map(([k, l, u]) =>
+    `<a class="${k ? "kevin" : ""}" href="${esc(u)}" target="_blank" rel="noopener">${esc(l)}<small>${esc(decodeURIComponent(u.split("q=")[1].split("&")[0]).replace(/\+/g, " "))}</small></a>`).join("")).join("");
+}
+$("#win").onchange = renderQs;
+
+// ---------- Copy summary ----------
+$("#copy").onclick = async () => {
+  if (!news && !sites) { toast("Run a scan first"); return; }
+  const lines = ["Kroger / Kevin Brown monitor — " + new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }), ""];
+  if (news && news.items) {
+    const fresh = news.items.filter(i => i.isNew);
+    lines.push("NEW MENTIONS (" + fresh.length + ")");
+    fresh.forEach(i => lines.push("- " + (i.namesKevin ? "[Kevin] " : "") + i.title + " (" + i.source + ", " + fmt(i.date) + ")\n  " + i.link));
+    if (!fresh.length) lines.push("- None");
+    lines.push("");
+  }
+  if (sites && sites.sites) {
+    const ch = sites.sites.filter(s => s.changed || !s.up);
+    lines.push("CAMPAIGN SITES");
+    ch.forEach(s => lines.push("- " + s.url.replace(/^https?:\/\/(www\.)?/, "") + ": " + (!s.up ? "down/unreachable" : "changed") +
+      (s.newHeads && s.newHeads.length ? " — new: " + s.newHeads.join("; ") : "")));
+    if (!ch.length) lines.push("- No changes");
+  }
+  try { await navigator.clipboard.writeText(lines.join("\n")); toast("Summary copied"); } catch (e) { toast("Couldn't copy"); }
+};
+
+renderDir(); renderQs();
+</script>
+</body></html>
